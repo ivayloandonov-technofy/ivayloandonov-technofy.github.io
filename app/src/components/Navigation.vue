@@ -10,14 +10,13 @@
         </v-list-tile>
         <v-list-tile>
           <router-link tag="li" to="/employees">
-            <a>Employee</a>
+            <a>Employees</a>
           </router-link>
         </v-list-tile>
         <v-list-group no-action prepend-icon="settings">
           <v-list-tile slot="activator">
             <v-list-tile-title>Settings</v-list-tile-title>
           </v-list-tile>
-
           <v-list-tile>
             <v-list-tile-title>Dark theme</v-list-tile-title>
             <v-list-tile-action>
@@ -27,16 +26,13 @@
         </v-list-group>
       </v-list>
     </v-navigation-drawer>
+
     <!-- Toolbar -->
-    <v-toolbar :clipped-left="clipped" fixed app color="#fff">
+    <v-toolbar :clipped-left="clipped" fixed app color="primary" dark>
       <v-toolbar-side-icon @click="drawer = !drawer"/>
       <v-spacer/>
-
-      <div v-if="logs.length > 0">
-        <appLogs :logs="logs"></appLogs>
-      </div>
       <div>
-        <h2>Welcome, user</h2>
+        <h3>Welcome, user</h3>
       </div>
     </v-toolbar>
   </nav>
@@ -54,18 +50,8 @@ export default {
       right: false
     };
   },
-  computed: {
-    // darkTheme: {
-    //   get: function () {
-    //     return this.$store.state.darkTheme;
-    //   },
-    //   set: function () {
-    //     this.$store.state.darkTheme;
-    //   }
-    // }
-  },
   methods: {
-    setTheme: () => {
+    setTheme() {
       console.log("darkTheme");
     }
   }
