@@ -255,7 +255,7 @@ export default {
         this.submitBtnDisabled = true;
         let payload = this.formCreate;
         axios
-          .put(`http://localhost:3000/employees`, {
+          .put(`https://guarded-mountain-73665.herokuapp.com/employees`, {
             payload
           })
           .then(({ data, status, statusText }) => {
@@ -276,7 +276,7 @@ export default {
         let payload = this.formCreate;
         axios
           .post(
-            `http://localhost:3000/employees/${payload.name}/${payload._id}`,
+            `https://guarded-mountain-73665.herokuapp.com/employees/${payload.name}/${payload._id}`,
             {
               payload
             }
