@@ -113,15 +113,18 @@ export default {
   },
   methods: {
     getEmployee(name, id) {
-      axios.get(`http://localhost:3000/employees/${name}/${id}`).then(
-        ({ data }) => {
+      axios
+        .get(`http://localhost:3000/employees/${name}/${id}`)
+        .then(({ data }) => {
           this.userProfile = data.user;
           this.skills = [""].concat(data.filters.skills);
           this.sectors = [""].concat(data.filters.sectors);
           console.log(data);
-        },
-        error => reject(error)
-      );
+        })
+        .catch(error => {
+          console.log(error);
+          this.submitBtnDisabled = false;
+        });
     },
     archiveEmployee() {
       console.log("archiveUser");
