@@ -26,7 +26,7 @@
               </v-flex>
               <v-flex xs12 sm3>
                 <v-select
-                  v-model="formFilter.status"
+                  v-model="formFilter.noLongerEmployee"
                   :items="statuses"
                   color="blue"
                   label="Select status"
@@ -56,7 +56,7 @@
             >{{ props.item.name }}</router-link>
           </td>
           <td>{{ props.item.sector }}</td>
-          <td>{{ props.item.skills }}</td>
+          <td>{{ props.item.skill }}</td>
           <td>{{ props.item.salary }}</td>
           <td>{{ props.item.arrivalDate }}</td>
         </template>
@@ -65,7 +65,14 @@
 
     <!-- Add employee modal -->
     <div class="text-xs-center">
-      <EmployeeModal mode="creare" :dialog="dialog" v-on:closeModal="closeModal($event)"/>
+      <EmployeeModal
+        mode="create"
+        :dialog="dialog"
+        :parentUpdataeTable="updataeTable"
+        :sectorsArr="sectors"
+        :skillsArr="skills"
+        v-on:closeModal="closeModal($event)"
+      />
     </div>
   </v-content>
 </template>
@@ -83,10 +90,10 @@ export default {
       formFilter: {
         sector: "",
         skill: "",
-        status: ""
+        noLongerEmployee: ""
       },
-      sectors: ["", "Develop", "Managment", "Sells"],
-      skills: ["", "JavaScript", "HTML", "CSS", "Project managment", "Sell"],
+      sectors: [""],
+      skills: [""],
       statuses: ["", "Curret employee", "Not curret employee"],
       headers: [
         { text: "Name", value: "name", align: "left" },
@@ -98,29 +105,17 @@ export default {
       employeesList: []
     };
   },
-  // computed: {
-  //   dialog: {
-  //     get: function() {
-  //       return this.dialogState;
-  //     },
-  //     set: function() {
-  //       this.dialogState;
-  //     }
-  //   }
-  // },
   methods: {
     getEmployees() {
       axios
-        .get(`http://localhost:3000/employees`, {
-          params: {
-            asc: true,
-            sortField: "name"
-          }
-        })
+        .get(`http://localhost:3000/employees`)
         .then(
           ({ data }) => {
             this.employeesList = data.employeesArr;
-            console.log(data);
+            this.skills = [""].concat(data.filters.skills);
+            this.sectors = [""].concat(data.filters.sectors);
+            console.log(data.employeesArr);
+            console.log(data.filters);
             // console.log("Trades:", status, statusText);
           },
           error => reject(error)
@@ -128,9 +123,26 @@ export default {
     },
     filterEmployees() {
       console.log("filterEmployees");
+      let filters = this.formFilter;
+      axios
+        .get(`http://localhost:3000/employees`, { params: { filters } })
+        .then(
+          ({ data }) => {
+            this.employeesList = data.employeesArr;
+            this.skills = [""].concat(data.filters.skills);
+            this.sectors = [""].concat(data.filters.sectors);
+            console.log(data.employeesArr);
+            console.log(data.filters);
+            // console.log("Trades:", status, statusText);
+          },
+          error => reject(error)
+        );
     },
     closeModal(eventDialog) {
       this.dialog = eventDialog;
+    },
+    updataeTable() {
+      this.getEmployees();
     }
   },
   created() {

@@ -1,8 +1,8 @@
 <template>
-  <v-dialog v-model="dialog" width="500">
+  <v-dialog v-model="dialog" width="500" persistent>
     <v-card>
       <v-card-title
-        v-if="mode === 'creare'"
+        v-if="mode === 'create'"
         class="headline grey lighten-2"
         primary-title
       >Add employee</v-card-title>
@@ -14,10 +14,20 @@
           <v-container>
             <v-layout>
               <v-flex xs12 md6>
-                <v-text-field v-model="formCreate.name" :rules="rules.name" label="Name" required></v-text-field>
+                <v-text-field
+                  v-model="formCreate.name"
+                  :rules="rules.inputCommonString"
+                  label="Name"
+                  required
+                ></v-text-field>
               </v-flex>
               <v-flex xs12 md6>
-                <v-text-field v-model="formCreate.age" :rules="rules.age" label="Age" required></v-text-field>
+                <v-text-field
+                  v-model="formCreate.age"
+                  :rules="rules.inputCommonString"
+                  label="Age"
+                  required
+                ></v-text-field>
               </v-flex>
             </v-layout>
           </v-container>
@@ -25,7 +35,7 @@
           <v-container>
             <v-text-field
               v-model="formCreate.nationality"
-              :rules="rules.nationality"
+              :rules="rules.inputCommonString"
               label="Nationality"
               required
             ></v-text-field>
@@ -36,7 +46,7 @@
               <v-flex xs12 md6>
                 <v-text-field
                   v-model="formCreate.salary"
-                  :rules="rules.salary"
+                  :rules="rules.inputCommonString"
                   label="Salary"
                   required
                 ></v-text-field>
@@ -44,8 +54,8 @@
               <v-flex xs12 md6>
                 <v-select
                   v-model="formCreate.sector"
-                  :items="sectors"
-                  :rules="rules.sector"
+                  :items="sectorsArr"
+                  :rules="rules.inputCommonString"
                   color="blue"
                   label="Select sector"
                   required
@@ -57,17 +67,40 @@
           <v-container>
             <v-layout>
               <v-flex xs12 md6>
-                <v-text-field
+                <!-- <v-text-field
                   v-model="formCreate.arrivalDate"
-                  :rules="rules.arrivalDate"
+                  :rules="rules.inputCommonString"
                   label="Arrival date"
                   required
-                ></v-text-field>
+                ></v-text-field>-->
+                <v-menu
+                  v-model="menuDate"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  lazy
+                  transition="scale-transition"
+                  offset-y
+                  full-width
+                  min-width="290px"
+                >
+                  <v-text-field
+                    slot="activator"
+                    v-model="formCreate.arrivalDate"
+                    label="Pick arrival date"
+                    prepend-icon="event"
+                    readonly
+                  ></v-text-field>
+                  <v-date-picker
+                    v-model="formCreate.arrivalDate"
+                    @input="menuDate = false"
+                    :max="new Date().toJSON()"
+                  ></v-date-picker>
+                </v-menu>
               </v-flex>
               <v-flex xs12 md6>
                 <v-text-field
                   v-model="formCreate.timeInCompany"
-                  :rules="rules.timeInCompany"
+                  :rules="rules.inputCommonString"
                   label="Time in company"
                   required
                 ></v-text-field>
@@ -77,11 +110,11 @@
           <!-- row -->
           <v-container>
             <v-select
-              v-model="formCreate.skills"
-              :items="skills"
-              :rules="rules.skills"
+              v-model="formCreate.skill"
+              :items="skillsArr"
+              :rules="rules.inputCommonString"
               color="blue"
-              label="Select skills"
+              label="Select skill"
               required
             ></v-select>
           </v-container>
@@ -92,7 +125,7 @@
           <v-container>
             <v-text-field
               v-model="formCreate.contacts.address"
-              :rules="rules.address"
+              :rules="rules.inputCommonString"
               label="Address"
               required
             ></v-text-field>
@@ -101,7 +134,7 @@
           <v-container>
             <v-text-field
               v-model="formCreate.contacts.phoneNumber"
-              :rules="rules.phoneNumber"
+              :rules="rules.inputCommonString"
               label="Phone number"
               required
             ></v-text-field>
@@ -123,7 +156,22 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn depressed @click="closeModal">Cancle</v-btn>
-        <v-btn color="primary" depressed dark @click="createUser" :disabled="submitBtnDisabled">Add</v-btn>
+        <v-btn
+          v-if="mode === 'create'"
+          color="primary"
+          depressed
+          dark
+          @click="createEmployee"
+          :disabled="submitBtnDisabled"
+        >Add</v-btn>
+        <v-btn
+          v-else
+          color="primary"
+          depressed
+          dark
+          @click="editEmployee"
+          :disabled="submitBtnDisabled"
+        >Edit</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -142,17 +190,35 @@ export default {
     dialog: {
       type: Boolean,
       required: true
+    },
+    parentUpdataeTable: {
+      type: Function,
+      required: true
+    },
+    userProps: {
+      type: Object,
+      required: false
+    },
+    sectorsArr: {
+      type: Array,
+      required: true
+    },
+    skillsArr: {
+      type: Array,
+      required: true
     }
   },
   data() {
     return {
+      currentDate: "",
       submitBtnDisabled: false,
+      menuDate: false,
       valid: true,
       formCreate: {
         name: "",
         age: "",
-        arrivalDate: "",
-        skills: "",
+        arrivalDate: new Date().toISOString().substr(0, 10),
+        skill: "",
         salary: "",
         sector: "",
         nationality: "",
@@ -163,55 +229,28 @@ export default {
           mail: ""
         }
       },
+      // axiosMethod: "",
       rules: {
-        name: [
-          v => !!v || "Name is required",
-          v => (v && v.length <= 10) || "Name must be less than 10 characters"
-        ],
-        age: [
-          v => !!v || "Age is required",
-          v => (v && v.length <= 10) || "Age must be less than 10 characters"
-        ],
-        nationality: [
-          v => !!v || "Nationality is required",
-          v => (v && v.length <= 10) || "Nationality must be less than 10 characters"
-        ],
-        salary: [
-          v => !!v || "Salary is required",
-          v => (v && v.length <= 10) || "Salary must be less than 10 characters"
-        ],
-        arrivalDate: [
-          v => !!v || "Arrival date is required",
-          v => (v && v.length <= 10) || "Arrival date must be less than 10 characters"
-        ],
-        skills: [
-          v => !!v || "Skills is required",
-          v => (v && v.length <= 10) || "Skills must be less than 10 characters"
-        ],
-        sector: [
-          v => !!v || "Sector is required",
-          v => (v && v.length <= 10) || "Sector must be less than 10 characters"
-        ],
-        timeInCompany: [
-          v => !!v || "Time in company is required",
-          v => (v && v.length <= 10) || "Time in company must be less than 10 characters"
-        ],
-        address: [
-          v => !!v || "Address is required",
-          v => (v && v.length <= 10) || "Address must be less than 10 characters"
-        ],
-        phoneNumber: [
-          v => !!v || "Phone number is required",
-          v => (v && v.length <= 10) || "Phone number must be less than 10 characters"
+        inputCommonString: [
+          v => !!v || "Field is required",
+          v => (v && v.length <= 20) || "Input must be less than 10 characters"
         ],
         mail: [
           v => !!v || "Mail is required",
-          v => (v && v.length <= 30) || "Mail must be less than 10 characters"
+          v => (v && v.length <= 30) || "Mail must be less than 30 characters"
         ]
       },
-      sectors: ["", "Develop", "Managment", "Sells"],
-      skills: ["", "JavaScript", "HTML", "CSS", "Project managment", "Sell"]
+      // sectors: ["", "Develop", "Managment", "Sells"],
+      // skills: ["", "JavaScript", "HTML", "CSS", "Project managment", "Sell"]
     };
+  },
+  watch: {
+    userProps(value) {
+      this.formCreate = value || this.formCreate;
+    }
+    // axiosMethod(value) {
+    //   this.axiosMethod = value === 'create' ? 'put' : 'post'
+    // }
   },
   methods: {
     closeModal() {
@@ -224,7 +263,7 @@ export default {
       }
       return false;
     },
-    createUser() {
+    createEmployee() {
       if (this.validate()) {
         this.submitBtnDisabled = true;
         let payload = this.formCreate;
@@ -233,7 +272,31 @@ export default {
             payload
           })
           .then(({ data, status, statusText }) => {
+            this.parentUpdataeTable();
             this.closeModal();
+            console.log(data);
+            console.log("Trades:", status, statusText);
+          })
+          .catch(error => {
+            console.log(error);
+            this.submitBtnDisabled = false;
+          });
+      }
+    },
+    editEmployee() {
+      if (this.validate()) {
+        this.submitBtnDisabled = true;
+        let payload = this.formCreate;
+        axios
+          .post(
+            `http://localhost:3000/employees/${payload.name}/${payload._id}`,
+            {
+              payload
+            }
+          )
+          .then(({ data, status, statusText }) => {
+            this.closeModal();
+            this.submitBtnDisabled = false;
             console.log(data);
             console.log("Trades:", status, statusText);
           })

@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Employees from './views/Employees.vue'
 import Employee from './views/Employee.vue'
+import CommonSettings from './views/CommonSettings.vue'
 
 Vue.use(Router)
 
@@ -26,6 +27,11 @@ export default new Router({
       name: 'employees',
       component: Employees
     },
-
+    {
+      path: '/settings/common',
+      name: 'commonSettings',
+      component: CommonSettings
+    }
+    
   ]
 })

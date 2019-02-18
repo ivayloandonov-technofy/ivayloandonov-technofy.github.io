@@ -18,10 +18,11 @@
             <v-list-tile-title>Settings</v-list-tile-title>
           </v-list-tile>
           <v-list-tile>
-            <v-list-tile-title>Dark theme</v-list-tile-title>
-            <v-list-tile-action>
-              <v-switch v-model="darkTheme" color="info" @change="setTheme"/>
-            </v-list-tile-action>
+            <v-list-tile-title>
+              <router-link tag="li" to="/settings/common">
+                <a>Common</a>
+              </router-link>
+            </v-list-tile-title>
           </v-list-tile>
         </v-list-group>
       </v-list>
