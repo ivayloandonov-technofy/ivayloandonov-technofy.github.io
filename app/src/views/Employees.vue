@@ -108,14 +108,13 @@ export default {
   methods: {
     getEmployees() {
       axios
-        .get(`http://localhost:3000/employees`)
+        .get(`https://guarded-mountain-73665.herokuapp.com/employees`)
         .then(({ data }) => {
           this.employeesList = data.employeesArr;
           this.skills = [""].concat(data.filters.skills);
           this.sectors = [""].concat(data.filters.sectors);
-          console.log(data.employeesArr);
-          console.log(data.filters);
-          // console.log("Trades:", status, statusText);
+          // console.log(data.employeesArr);
+          // console.log(data.filters);
         })
         .catch(error => {
           console.log(error);
@@ -126,14 +125,13 @@ export default {
       console.log("filterEmployees");
       let filters = this.formFilter;
       axios
-        .get(`http://localhost:3000/employees`, { params: { filters } })
+        .get(`https://guarded-mountain-73665.herokuapp.com/employees`, { params: { filters } })
         .then(({ data }) => {
           this.employeesList = data.employeesArr;
           this.skills = [""].concat(data.filters.skills);
           this.sectors = [""].concat(data.filters.sectors);
-          console.log(data.employeesArr);
-          console.log(data.filters);
-          // console.log("Trades:", status, statusText);
+          // console.log(data.employeesArr);
+          // console.log(data.filters);
         })
         .catch(error => {
           console.log(error);
