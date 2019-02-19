@@ -27,12 +27,6 @@
               Nationality:
               <span class="title black--text font-italic">{{userProfile.nationality}}</span>
             </div>
-            <!-- <div class="mb-3 title grey--text">
-              noLongerEmployee:
-              <span
-                class="title black--text font-italic"
-              >{{userProfile.noLongerEmployee}}</span>
-            </div>-->
             <div class="mb-3 title grey--text">
               Salary:
               <span class="title black--text font-italic">{{userProfile.salary}}</span>
@@ -40,6 +34,10 @@
             <div class="mb-3 title grey--text">
               Sector:
               <span class="title black--text font-italic">{{userProfile.sector}}</span>
+            </div>
+            <div class="mb-3 title grey--text">
+              Skills:
+              <span class="title black--text font-italic">{{userProfile.skill}}</span>
             </div>
             <div class="mb-3 title grey--text">
               Time in company:
@@ -69,6 +67,7 @@
             @click="archiveEmployee"
           >Archive</v-btn>
           <v-btn color="cyan" depressed dark @click="dialog = true">Edit</v-btn>
+          <!-- <v-btn v-if="userProfile.noLongerEmployee == false" color="cyan" depressed dark @click="dialog = true">Edit</v-btn> -->
         </v-card-actions>
       </v-card>
     </v-container>
@@ -113,28 +112,30 @@ export default {
   },
   methods: {
     getEmployee(name, id) {
-      axios.get(`http://localhost:3000/employees/${name}/${id}`).then(
-        ({ data }) => {
+      axios
+        .get(`https://guarded-mountain-73665.herokuapp.com/employees/${name}/${id}`)
+        .then(({ data }) => {
           this.userProfile = data.user;
           this.skills = [""].concat(data.filters.skills);
           this.sectors = [""].concat(data.filters.sectors);
-          console.log(data);
-        },
-        error => reject(error)
-      );
+        //   console.log(data);
+        })
+        .catch(error => {
+          console.log(error);
+          this.submitBtnDisabled = false;
+        });
     },
     archiveEmployee() {
-      console.log("archiveUser");
       let name = this.$route.params.name;
       let id = this.$route.params.id;
 
       axios
-        .post(`http://localhost:3000/employees/${name}/${id}`, {
+        .post(`https://guarded-mountain-73665.herokuapp.com/${name}/${id}`, {
           archive: true
         })
         .then(({ data, status, statusText }) => {
-          console.log(data);
-          console.log("Trades:", status, statusText);
+          this.userProfile = data.user;
+        //   console.log(data);
         })
         .catch(error => {
           console.log(error);

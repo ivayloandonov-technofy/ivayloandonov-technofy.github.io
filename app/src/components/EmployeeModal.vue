@@ -67,12 +67,6 @@
           <v-container>
             <v-layout>
               <v-flex xs12 md6>
-                <!-- <v-text-field
-                  v-model="formCreate.arrivalDate"
-                  :rules="rules.inputCommonString"
-                  label="Arrival date"
-                  required
-                ></v-text-field>-->
                 <v-menu
                   v-model="menuDate"
                   :close-on-content-click="false"
@@ -120,7 +114,6 @@
           </v-container>
 
           <h3>Contacts</h3>
-
           <!-- row -->
           <v-container>
             <v-text-field
@@ -229,7 +222,6 @@ export default {
           mail: ""
         }
       },
-      // axiosMethod: "",
       rules: {
         inputCommonString: [
           v => !!v || "Field is required",
@@ -240,17 +232,12 @@ export default {
           v => (v && v.length <= 30) || "Mail must be less than 30 characters"
         ]
       },
-      // sectors: ["", "Develop", "Managment", "Sells"],
-      // skills: ["", "JavaScript", "HTML", "CSS", "Project managment", "Sell"]
     };
   },
   watch: {
     userProps(value) {
       this.formCreate = value || this.formCreate;
     }
-    // axiosMethod(value) {
-    //   this.axiosMethod = value === 'create' ? 'put' : 'post'
-    // }
   },
   methods: {
     closeModal() {
@@ -268,7 +255,7 @@ export default {
         this.submitBtnDisabled = true;
         let payload = this.formCreate;
         axios
-          .put(`http://localhost:3000/employees`, {
+          .put(`https://guarded-mountain-73665.herokuapp.com/employees`, {
             payload
           })
           .then(({ data, status, statusText }) => {
@@ -289,7 +276,7 @@ export default {
         let payload = this.formCreate;
         axios
           .post(
-            `http://localhost:3000/employees/${payload.name}/${payload._id}`,
+            `https://guarded-mountain-73665.herokuapp.com/employees/${payload.name}/${payload._id}`,
             {
               payload
             }

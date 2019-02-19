@@ -9,9 +9,3 @@
     </v-container>
   </v-content>
 </template>
-
-<script>
-export default {
-  components: {}
-};
-</script>

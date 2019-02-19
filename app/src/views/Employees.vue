@@ -108,35 +108,35 @@ export default {
   methods: {
     getEmployees() {
       axios
-        .get(`http://localhost:3000/employees`)
-        .then(
-          ({ data }) => {
-            this.employeesList = data.employeesArr;
-            this.skills = [""].concat(data.filters.skills);
-            this.sectors = [""].concat(data.filters.sectors);
-            console.log(data.employeesArr);
-            console.log(data.filters);
-            // console.log("Trades:", status, statusText);
-          },
-          error => reject(error)
-        );
+        .get(`https://guarded-mountain-73665.herokuapp.com/employees`)
+        .then(({ data }) => {
+          this.employeesList = data.employeesArr;
+          this.skills = [""].concat(data.filters.skills);
+          this.sectors = [""].concat(data.filters.sectors);
+          // console.log(data.employeesArr);
+          // console.log(data.filters);
+        })
+        .catch(error => {
+          console.log(error);
+          this.submitBtnDisabled = false;
+        });
     },
     filterEmployees() {
       console.log("filterEmployees");
       let filters = this.formFilter;
       axios
-        .get(`http://localhost:3000/employees`, { params: { filters } })
-        .then(
-          ({ data }) => {
-            this.employeesList = data.employeesArr;
-            this.skills = [""].concat(data.filters.skills);
-            this.sectors = [""].concat(data.filters.sectors);
-            console.log(data.employeesArr);
-            console.log(data.filters);
-            // console.log("Trades:", status, statusText);
-          },
-          error => reject(error)
-        );
+        .get(`https://guarded-mountain-73665.herokuapp.com/employees`, { params: { filters } })
+        .then(({ data }) => {
+          this.employeesList = data.employeesArr;
+          this.skills = [""].concat(data.filters.skills);
+          this.sectors = [""].concat(data.filters.sectors);
+          // console.log(data.employeesArr);
+          // console.log(data.filters);
+        })
+        .catch(error => {
+          console.log(error);
+          this.submitBtnDisabled = false;
+        });
     },
     closeModal(eventDialog) {
       this.dialog = eventDialog;

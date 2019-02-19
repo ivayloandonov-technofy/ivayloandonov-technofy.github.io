@@ -32,6 +32,5 @@ export default new Router({
       name: 'commonSettings',
       component: CommonSettings
     }
-    
   ]
 })
