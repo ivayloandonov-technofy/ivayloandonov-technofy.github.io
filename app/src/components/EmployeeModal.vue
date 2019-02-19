@@ -255,14 +255,13 @@ export default {
         this.submitBtnDisabled = true;
         let payload = this.formCreate;
         axios
-          .put(`https://guarded-mountain-73665.herokuapp.com/employees`, {
+          .put(`https://protected-inlet-44275.herokuapp.com/employees`, {
             payload
           })
           .then(({ data, status, statusText }) => {
             this.parentUpdataeTable();
             this.closeModal();
-            console.log(data);
-            console.log("Trades:", status, statusText);
+            // console.log(data);
           })
           .catch(error => {
             console.log(error);
@@ -276,7 +275,7 @@ export default {
         let payload = this.formCreate;
         axios
           .post(
-            `https://guarded-mountain-73665.herokuapp.com/employees/${payload.name}/${payload._id}`,
+            `https://protected-inlet-44275.herokuapp.com/employees/${payload.name}/${payload._id}`,
             {
               payload
             }
@@ -284,8 +283,7 @@ export default {
           .then(({ data, status, statusText }) => {
             this.closeModal();
             this.submitBtnDisabled = false;
-            console.log(data);
-            console.log("Trades:", status, statusText);
+            // console.log(data);
           })
           .catch(error => {
             console.log(error);

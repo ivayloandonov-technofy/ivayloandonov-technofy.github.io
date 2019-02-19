@@ -113,7 +113,7 @@ export default {
   methods: {
     getEmployee(name, id) {
       axios
-        .get(`https://guarded-mountain-73665.herokuapp.com/employees/${name}/${id}`)
+        .get(`https://protected-inlet-44275.herokuapp.com/employees/${name}/${id}`)
         .then(({ data }) => {
           this.userProfile = data.user;
           this.skills = [""].concat(data.filters.skills);
@@ -130,7 +130,7 @@ export default {
       let id = this.$route.params.id;
 
       axios
-        .post(`https://guarded-mountain-73665.herokuapp.com/${name}/${id}`, {
+        .post(`https://protected-inlet-44275.herokuapp.com/employees/${name}/${id}`, {
           archive: true
         })
         .then(({ data, status, statusText }) => {

@@ -50,11 +50,6 @@ export default {
       width: "250",
       right: false
     };
-  },
-  methods: {
-    setTheme() {
-      console.log("darkTheme");
-    }
   }
 };
 </script>

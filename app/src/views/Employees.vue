@@ -108,7 +108,7 @@ export default {
   methods: {
     getEmployees() {
       axios
-        .get(`https://guarded-mountain-73665.herokuapp.com/employees`)
+        .get(`https://protected-inlet-44275.herokuapp.com/employees`)
         .then(({ data }) => {
           this.employeesList = data.employeesArr;
           this.skills = [""].concat(data.filters.skills);
@@ -125,7 +125,7 @@ export default {
       console.log("filterEmployees");
       let filters = this.formFilter;
       axios
-        .get(`https://guarded-mountain-73665.herokuapp.com/employees`, { params: { filters } })
+        .get(`https://protected-inlet-44275.herokuapp.com/employees`, { params: { filters } })
         .then(({ data }) => {
           this.employeesList = data.employeesArr;
           this.skills = [""].concat(data.filters.skills);

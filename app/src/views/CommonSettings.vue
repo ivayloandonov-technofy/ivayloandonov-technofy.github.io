@@ -98,7 +98,7 @@ export default {
     addSkill() {
       let payload = this.formSkills.skill;
       axios
-        .post(`https://guarded-mountain-73665.herokuapp.com/settings/skills`, { skill: payload })
+        .post(`https://protected-inlet-44275.herokuapp.com/settings/skills`, { skill: payload })
         .then(({ data }) => {
           this.skills = data.skills;
           // this.formSkills.skill = "";
@@ -112,7 +112,7 @@ export default {
     addSector() {
       let payload = this.formSectors.sector;
       axios
-        .post(`https://guarded-mountain-73665.herokuapp.com/settings/sectors`, { sector: payload })
+        .post(`https://protected-inlet-44275.herokuapp.com/settings/sectors`, { sector: payload })
         .then(({ data }) => {
           this.sectors = data.sectors;
           // this.formSectors.sector = "";
