@@ -4,11 +4,7 @@
     <v-container>
       <v-card flat>
         <v-card-title class="headline grey lighten-3" primary-title>Employee profile</v-card-title>
-        <div
-          v-if="userProfile.noLongerEmployee == !false"
-          class="display-1 red--text red lighten-4 pa-2 text-xs-center"
-          dark
-        >NO LONGER EMPLOYEE</div>
+
         <v-card-text>
           <v-container>
             <div>test</div>
@@ -22,9 +18,9 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-form v-model="valid" ref="formCreate" @submit.prevent="submit" lazy-validation>
+          <v-form v-model="valid" ref="formSector" @submit.prevent="submit" lazy-validation>
             <v-text-field
-              v-model="formCreate.age"
+              v-model="formSector.sector"
               :rules="rules.inputCommonString"
               label="Age"
               required
@@ -38,11 +34,7 @@
     <v-container>
       <v-card flat>
         <v-card-title class="headline grey lighten-3" primary-title>Employee profile</v-card-title>
-        <div
-          v-if="userProfile.noLongerEmployee == !false"
-          class="display-1 red--text red lighten-4 pa-2 text-xs-center"
-          dark
-        >NO LONGER EMPLOYEE</div>
+
         <v-card-text>
           <v-container>
             <div>test</div>
@@ -56,9 +48,9 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-form v-model="valid" ref="formCreate" @submit.prevent="submit" lazy-validation>
+          <v-form v-model="valid" ref="formSkills" @submit.prevent="submit" lazy-validation>
             <v-text-field
-              v-model="formCreate.age"
+              v-model="formSkills.skill"
               :rules="rules.inputCommonString"
               label="Age"
               required
@@ -76,15 +68,32 @@ import axios from "axios";
 
 export default {
   components: {},
+  data() {
+    return {
+      valid: true,
+      rules: {
+        inputCommonString: [
+          v => !!v || "Field is required",
+          v => (v && v.length <= 20) || "Input must be less than 10 characters"
+        ]
+      },
+      formSector: {
+        sector: ""
+      },
+      formSkills: {
+        skill: ""
+      }
+    };
+  },
   methods: {
     getTemplates() {
-      axios.get(`http://localhost:3000/employees`).then(
-        ({ data }) => {
-          this.userProfile = data.user;
-          console.log(data.filters);
-        },
-        error => reject(error)
-      );
+      // axios.get(`http://localhost:3000/employees`).then(
+      //   ({ data }) => {
+      //     this.userProfile = data.user;
+      //     console.log(data.filters);
+      //   },
+      //   error => reject(error)
+      // );
     },
     addFilter() {
       console.log("addFilter");
